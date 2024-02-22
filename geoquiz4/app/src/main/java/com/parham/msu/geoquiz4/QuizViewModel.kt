@@ -15,8 +15,7 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         super.onCleared()
         Log.d(TAG, "ViewModel instance about to be destroyed")
     }*/
-
-    private val questionBank = listOf(
+    val questionBank = listOf(
         Question(R.string.question_australia, answer = true),
         Question(R.string.question_ocean, answer = true),
         Question(R.string.question_mideast, answer = false),
@@ -24,7 +23,7 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         Question(R.string.question_americas, answer = true),
         Question(R.string.question_asia, answer = true)
     )
-    private var currentIndex: Int
+    var currentIndex: Int
         get() = savedStateHandle.get(CURRENT_INDEX_KEY)?:0
         set(value) = savedStateHandle.set(CURRENT_INDEX_KEY, value)
 
@@ -46,12 +45,12 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         }
     }
 
-    fun getCurrentIndex(): Int {
+    /*fun getCurrentIndex(): Int {
         return currentIndex
-    }
+    }*/
 
-    fun getQuestionBank(): List<Question> {
+    /*fun getQuestionBank(): List<Question> {
         return questionBank
-    }
+    }*/
 
 }

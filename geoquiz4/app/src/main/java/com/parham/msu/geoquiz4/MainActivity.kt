@@ -15,14 +15,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding:ActivityMainBinding
     private val quizViewModel: QuizViewModel by viewModels()
 
-    private fun encap() {
-        val currentIndex = quizViewModel.getCurrentIndex()
-        val questionBank = quizViewModel.getQuestionBank()
-    }
+
+    var currentIndex = quizViewModel.currentIndex
+    var questionBank = quizViewModel.questionBank
+
 
     private var correctAnswerCount = 0
 
-    private var totalQuestion = quizViewModel.getQuestionBank().size
+//    private var totalQuestion = quizViewModel.getQuestionBank().size
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT)
             .show()
-        if (quizViewModel.getCurrentIndex() == quizViewModel.getQuestionBank().size - 1) {
+        if (quizViewModel.currentIndex == quizViewModel.questionBank.size - 1) {
             finalScore()
             reset()
         }
@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun finalScore() {
-        val percentage = ((correctAnswerCount * 100.0 / quizViewModel.getQuestionBank().size).roundToInt())
+        val percentage = ((correctAnswerCount * 100.0 / quizViewModel.questionBank.size).roundToInt())
         val formattedPercentage = String.format("%.1f", percentage.toDouble())
 
         val message = "Quiz complete! Your score is $formattedPercentage%"
