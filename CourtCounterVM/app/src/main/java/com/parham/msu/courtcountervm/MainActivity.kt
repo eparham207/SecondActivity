@@ -1,95 +1,74 @@
 package com.parham.msu.courtcountervm
 
-
 import android.os.Bundle
-import androidx.activity.viewModels
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.parham.msu.courtcountervm.databinding.ActivityMainBinding
+
 class MainActivity : AppCompatActivity() {
 
-    var scoreTeamA = 0
-    var scoreTeamB = 0
+    private val viewModel: ScoreViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Restore scores if there's a saved instance state
+        if (savedInstanceState != null) {
+            viewModel.scoreTeamA = savedInstanceState.getInt("scoreTeamA", 0)
+            viewModel.scoreTeamB = savedInstanceState.getInt("scoreTeamB", 0)
+        }
+
+        updateScores()
     }
 
-    /**
-     * Increase the score for Team A by 1 point.
-     */
+    override fun onSaveInstanceState(outState: Bundle) {
+        // Save scores in case of configuration change
+        outState.putInt("scoreTeamA", viewModel.scoreTeamA)
+        outState.putInt("scoreTeamB", viewModel.scoreTeamB)
+        super.onSaveInstanceState(outState)
+    }
+
     fun addOneForTeamA(v: View?) {
-        scoreTeamA++
-        displayForTeamA(scoreTeamA)
+        viewModel.addScoreTeamA(1)
+        updateScores()
     }
 
-    /**
-     * Increase the score for Team A by 2 points.
-     */
     fun addTwoForTeamA(v: View?) {
-        scoreTeamA += 2
-        displayForTeamA(scoreTeamA)
+        viewModel.addScoreTeamA(2)
+        updateScores()
     }
 
-    /**
-     * Increase the score for Team A by 3 points.
-     */
     fun addThreeForTeamA(v: View?) {
-        scoreTeamA += 3
-        displayForTeamA(scoreTeamA)
+        viewModel.addScoreTeamA(3)
+        updateScores()
     }
 
-    /**
-     * Increase the score for Team B by 1 point.
-     */
     fun addOneForTeamB(v: View?) {
-        scoreTeamB++
-        displayForTeamB(scoreTeamB)
+        viewModel.addScoreTeamB(1)
+        updateScores()
     }
 
-    /**
-     * Increase the score for Team B by 2 points.
-     */
     fun addTwoForTeamB(v: View?) {
-        scoreTeamB += 2
-        displayForTeamB(scoreTeamB)
+        viewModel.addScoreTeamB(2)
+        updateScores()
     }
 
-    /**
-     * Increase the score for Team B by 3 points.
-     */
     fun addThreeForTeamB(v: View?) {
-        scoreTeamB += 3
-        displayForTeamB(scoreTeamB)
+        viewModel.addScoreTeamB(3)
+        updateScores()
     }
 
-    /**
-     * Resets the score for both teams back to 0.
-     */
     fun resetScore(v: View?) {
-        scoreTeamA = 0
-        scoreTeamB = 0
-        displayForTeamA(scoreTeamA)
-        displayForTeamB(scoreTeamB)
+        viewModel.resetScores()
+        updateScores()
     }
 
-    /**
-     * Displays the given score for Team A.
-     */
-    fun displayForTeamA(score: Int) {
-        val scoreView = binding.teamAScore
-        scoreView.text = score.toString()
-    }
-
-    /**
-     * Displays the given score for Team B.
-     */
-    fun displayForTeamB(score: Int) {
-        val scoreView = binding.teamBScore
-        scoreView.text = score.toString()
+    private fun updateScores() {
+        binding.teamAScore.text = viewModel.scoreTeamA.toString()
+        binding.teamBScore.text = viewModel.scoreTeamB.toString()
     }
 }
