@@ -1,6 +1,8 @@
 // QuizViewModel.kt
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.parham.msu.geoquiz4.Question
+import com.parham.msu.geoquiz4.R
 
 private const val TAG = "QuizViewModel"
 const val CURRENT_INDEX_KEY = "CURRENT_INDEX_KEY"
@@ -13,7 +15,7 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
 
     private var quizListener: QuizListener? = null
 
-    val questionBank = listOf(
+    private val questionBank = listOf(
         Question(R.string.question_australia, answer = true),
         Question(R.string.question_ocean, answer = true),
         Question(R.string.question_mideast, answer = false),
