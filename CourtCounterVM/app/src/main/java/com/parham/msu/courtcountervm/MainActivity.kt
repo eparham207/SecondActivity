@@ -71,4 +71,5 @@ class MainActivity : AppCompatActivity() {
         binding.teamAScore.text = viewModel.scoreTeamA.toString()
         binding.teamBScore.text = viewModel.scoreTeamB.toString()
     }
+    private var test = 1
 }
