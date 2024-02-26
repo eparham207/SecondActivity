@@ -1,58 +1,52 @@
 package com.parham.msu.geoquiz4
 
-import androidx.appcompat.app.AppCompatActivity
+
+// MainActivity.kt
+import QuizListener
+import QuizViewModel
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.Log
-import androidx.activity.viewModels
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.parham.msu.geoquiz4.databinding.ActivityMainBinding
-import kotlin.math.roundToInt
 
 private const val TAG = "MainActivity"
-class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding:ActivityMainBinding
+class MainActivity : AppCompatActivity(), QuizListener {
+
+    private lateinit var binding: ActivityMainBinding
     private val quizViewModel: QuizViewModel by viewModels()
-
-
-    var currentIndex = quizViewModel.currentIndex
-    var questionBank = quizViewModel.questionBank
-
-
-    private var correctAnswerCount = 0
-
-//    private var totalQuestion = quizViewModel.getQuestionBank().size
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate(Bundle?) called")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Log.d(TAG, "Got a QuizViewModel: $quizViewModel")
 
-        binding.trueButton.setOnClickListener{
+        quizViewModel.setQuizListener(this)
+
+        binding.trueButton.setOnClickListener {
             checkAnswer(true)
             setButtonState(false)
         }
-        binding.FalseButton.setOnClickListener{
+
+        binding.FalseButton.setOnClickListener {
             checkAnswer(false)
             setButtonState(false)
         }
 
-        binding.nextButton.setOnClickListener{
+        binding.nextButton.setOnClickListener {
             quizViewModel.moveToNext()
             updateQuestion()
             setButtonState(true)
         }
 
-        binding.questionTextview.setOnClickListener{
+        binding.questionTextview.setOnClickListener {
             quizViewModel.moveToNext()
             updateQuestion()
             setButtonState(true)
-
         }
-        binding.previousButton.setOnClickListener{
+
+        binding.previousButton.setOnClickListener {
             quizViewModel.moveToPrev()
             updateQuestion()
             setButtonState(true)
@@ -60,49 +54,42 @@ class MainActivity : AppCompatActivity() {
 
         updateQuestion()
     }
+
     private fun updateQuestion() {
-        val questiontextResId = quizViewModel.currentQuestionText
-        binding.questionTextview.setText(questiontextResId)
+        val questionTextResId = quizViewModel.currentQuestionText
+        binding.questionTextview.setText(questionTextResId)
     }
-    private fun checkAnswer(userAnswer:Boolean) {
+
+    private fun checkAnswer(userAnswer: Boolean) {
         val correctAnswer = quizViewModel.currentQuestionAnswer
 
         if (userAnswer == correctAnswer) {
-            correctAnswerCount++
+            quizViewModel.correctAnswerCount++
         }
 
-        val messageResId = if (userAnswer == correctAnswer){
+        val messageResId = if (userAnswer == correctAnswer) {
             R.string.correct_toast
         } else {
             R.string.incorrect_toast
         }
 
-        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT)
-            .show()
-        if (quizViewModel.currentIndex == quizViewModel.questionBank.size - 1) {
-            finalScore()
-            reset()
-        }
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
     }
 
-    private fun setButtonState(enabled:Boolean) {
+    private fun setButtonState(enabled: Boolean) {
         binding.trueButton.isEnabled = enabled
         binding.FalseButton.isEnabled = enabled
-
     }
 
-    private fun finalScore() {
-        val percentage = ((correctAnswerCount * 100.0 / quizViewModel.questionBank.size).roundToInt())
-        val formattedPercentage = String.format("%.1f", percentage.toDouble())
-
-        val message = "Quiz complete! Your score is $formattedPercentage%"
+    override fun onQuizCompleted(score: Int) {
+        val message = "Quiz complete! Your score is $score%"
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
-    private fun reset() {
-        correctAnswerCount = 0
-    }
+}
 
-    override fun onStart() {
+
+
+   /* override fun onStart() {
         super.onStart()
         Log.d(TAG, "onStart() called")
     }
@@ -126,5 +113,5 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         Log.d(TAG, "onDestroy() called")
     }
+*/
 
-}

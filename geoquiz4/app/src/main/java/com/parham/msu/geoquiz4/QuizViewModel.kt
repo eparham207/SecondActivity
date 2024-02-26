@@ -1,20 +1,18 @@
-package com.parham.msu.geoquiz4
-
-import android.util.Log
+// QuizViewModel.kt
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 
 private const val TAG = "QuizViewModel"
 const val CURRENT_INDEX_KEY = "CURRENT_INDEX_KEY"
-class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
-    /*init {
-        Log.d(TAG, "ViewModel instance created")
-    }
 
-    override fun onCleared() {
-        super.onCleared()
-        Log.d(TAG, "ViewModel instance about to be destroyed")
-    }*/
+interface QuizListener {
+    fun onQuizCompleted(score: Int)
+}
+
+class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
+
+    private var quizListener: QuizListener? = null
+
     val questionBank = listOf(
         Question(R.string.question_australia, answer = true),
         Question(R.string.question_ocean, answer = true),
@@ -24,33 +22,47 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         Question(R.string.question_asia, answer = true)
     )
     var currentIndex: Int
-        get() = savedStateHandle.get(CURRENT_INDEX_KEY)?:0
+        get() = savedStateHandle.get(CURRENT_INDEX_KEY) ?: 0
         set(value) = savedStateHandle.set(CURRENT_INDEX_KEY, value)
+
+    var correctAnswerCount = 0
+
+    init {
+        checkIfLastQuestion()
+    }
+
+    private fun checkIfLastQuestion() {
+        if (currentIndex == questionBank.size - 1) {
+            quizListener?.onQuizCompleted(finalScore())
+            reset()
+        }
+    }
+
+    fun moveToNext() {
+        currentIndex = (currentIndex + 1) % questionBank.size
+        checkIfLastQuestion()
+    }
+
+    fun moveToPrev() {
+        currentIndex = (currentIndex - 1 + questionBank.size) % questionBank.size
+        checkIfLastQuestion()
+    }
+
+    fun setQuizListener(listener: QuizListener) {
+        quizListener = listener
+    }
+
+    private fun finalScore(): Int {
+        return ((correctAnswerCount * 100.0 / questionBank.size).toInt())
+    }
+
+    private fun reset() {
+        correctAnswerCount = 0
+    }
 
     val currentQuestionAnswer: Boolean
         get() = questionBank[currentIndex].answer
 
     val currentQuestionText: Int
         get() = questionBank[currentIndex].textResId
-
-    fun moveToNext() {
-        currentIndex = (currentIndex + 1) % questionBank.size
-    }
-
-    fun moveToPrev() {
-        currentIndex = if (currentIndex > 0) {
-            (currentIndex - 1) % questionBank.size
-        } else {
-            questionBank.size - 1 // Set currentIndex to the last index if it's already 0
-        }
-    }
-
-    /*fun getCurrentIndex(): Int {
-        return currentIndex
-    }*/
-
-    /*fun getQuestionBank(): List<Question> {
-        return questionBank
-    }*/
-
 }
