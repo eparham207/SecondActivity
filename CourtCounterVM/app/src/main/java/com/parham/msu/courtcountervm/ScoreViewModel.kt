@@ -41,4 +41,5 @@ class ScoreViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel
         scoreTeamA = 0
         scoreTeamB = 0
     }
+    private var test = 1
 }
