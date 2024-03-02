@@ -1,6 +1,6 @@
 package com.parham.msu.secondactivity
 
-import android.util.Log
+
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 
@@ -10,15 +10,6 @@ const val CORRECT_ANSWER_KEY = "CORRECT_ANSWER_KEY"
 
 class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
-    /*init{
-        Log.d(TAG, "QuizViewModel instance created")
-    }
-
-    override fun onCleared(){
-        super.onCleared()
-
-        Log.d(TAG,"QuizViewModel instance about to be destroyed")
-    }*/
     private val questionBank = listOf(
         Question(R.string.question_australia, answer = true),
         Question(R.string.question_ocean, answer = true),
