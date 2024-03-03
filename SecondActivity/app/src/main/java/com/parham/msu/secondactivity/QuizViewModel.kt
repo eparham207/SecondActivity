@@ -67,4 +67,8 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     fun calculatePercentage(): Double {
         return (correctAnswerCount * 100.0 / questionBank.size)
     }
+    fun resetCheaterStatus() {
+        isCheater = false
+        savedStateHandle.set(IS_CHEATER_KEY, false)
+    }
 }

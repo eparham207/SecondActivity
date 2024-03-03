@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.nextButton.setOnClickListener{
             //currentIndex = (currentIndex + 1) % questionBank.size
+            quizViewModel.resetCheaterStatus()
             quizViewModel.moveToNext()
             updateQuestion()
             setButtonState(true)
@@ -57,12 +58,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.questionTextview.setOnClickListener{
+            quizViewModel.resetCheaterStatus()
             quizViewModel.moveToNext()
             updateQuestion()
             setButtonState(true)
 
         }
         binding.previousButton.setOnClickListener{
+            quizViewModel.resetCheaterStatus()
             quizViewModel.moveToPrev()
             updateQuestion()
             setButtonState(true)
