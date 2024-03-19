@@ -5,13 +5,15 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
+import android.os.PersistableBundle
 import com.parham.msu.secondactivity.databinding.ActivityCheatBinding
+
 import com.parham.msu.secondactivity.databinding.ActivityMainBinding
 
 const val EXTRA_ANSWER_SHOWN = "com.parham.msu.secondActivity.answer_shown"
 private const val EXTRA_ANSWER_IS_TRUE =
     "com.parham.msu.secondActivity.answer_is_true"
-
 
 private lateinit var binding: ActivityCheatBinding
 private var answerIsTrue = false

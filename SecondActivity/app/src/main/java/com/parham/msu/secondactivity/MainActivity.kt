@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
             //currentIndex = (currentIndex + 1) % questionBank.size
             quizViewModel.resetCheaterStatus()
             quizViewModel.moveToNext()
+            quizViewModel.resetIsAnswered()
             updateQuestion()
             setButtonState(true)
         }
@@ -60,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         binding.questionTextview.setOnClickListener{
             quizViewModel.resetCheaterStatus()
             quizViewModel.moveToNext()
+            quizViewModel.resetIsAnswered()
             updateQuestion()
             setButtonState(true)
 
@@ -67,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         binding.previousButton.setOnClickListener{
             quizViewModel.resetCheaterStatus()
             quizViewModel.moveToPrev()
+            quizViewModel.resetIsAnswered()
             updateQuestion()
             setButtonState(true)
         }
@@ -79,7 +82,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer(userAnswer: Boolean) {
-        quizViewModel.checkAnswer(userAnswer)
+        //quizViewModel.checkAnswer(userAnswer)
+        quizViewModel.resetIsAnswered()
 
         /*val messageResId = if (userAnswer == quizViewModel.currentQuestionAnswer) {
             R.string.correct_toast
@@ -119,30 +123,53 @@ class MainActivity : AppCompatActivity() {
         quizViewModel.zero()
     }
 
-
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "onStart() called")
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(CURRENT_INDEX_KEY, quizViewModel.currentIndex)
+        outState.putBoolean(IS_ANSWERED_KEY, quizViewModel.isLastQuestion())
+       // outState.putBoolean(USER_ANSWER_KEY, quizViewModel.userAnswer)
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume() called")
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        val savedIndex = savedInstanceState.getInt(CURRENT_INDEX_KEY)
+        val isAnswered = savedInstanceState.getBoolean(IS_ANSWERED_KEY, false)
+        val userAnswer = savedInstanceState.getBoolean(USER_ANSWER_KEY, false)
+
+        quizViewModel.currentIndex = savedIndex
+       // quizViewModel.userAnswer = userAnswer
+
+        if (isAnswered) {
+            updateQuestion()
+            setButtonState(true)
+        }
     }
 
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "onPause() called")
-    }
 
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop() called")
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy() called")
-    }
+        override fun onStart() {
+            super.onStart()
+            Log.d(TAG, "onStart() called")
+        }
 
-}
+        override fun onResume() {
+            super.onResume()
+            Log.d(TAG, "onResume() called")
+        }
+
+        override fun onPause() {
+            super.onPause()
+            Log.d(TAG, "onPause() called")
+        }
+
+        override fun onStop() {
+            super.onStop()
+            Log.d(TAG, "onStop() called")
+        }
+
+        override fun onDestroy() {
+            super.onDestroy()
+            Log.d(TAG, "onDestroy() called")
+        }
+
+    }
