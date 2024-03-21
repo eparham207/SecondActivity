@@ -45,10 +45,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.nextButton.setOnClickListener{
-            //currentIndex = (currentIndex + 1) % questionBank.size
             quizViewModel.resetCheaterStatus()
             quizViewModel.moveToNext()
-            quizViewModel.resetIsAnswered()
             updateQuestion()
             setButtonState(true)
         }
@@ -62,7 +60,6 @@ class MainActivity : AppCompatActivity() {
         binding.questionTextview.setOnClickListener{
             quizViewModel.resetCheaterStatus()
             quizViewModel.moveToNext()
-            quizViewModel.resetIsAnswered()
             updateQuestion()
             setButtonState(true)
 
@@ -70,7 +67,6 @@ class MainActivity : AppCompatActivity() {
         binding.previousButton.setOnClickListener{
             quizViewModel.resetCheaterStatus()
             quizViewModel.moveToPrev()
-            quizViewModel.resetIsAnswered()
             updateQuestion()
             setButtonState(true)
         }
@@ -83,14 +79,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer(userAnswer: Boolean) {
-        //quizViewModel.checkAnswer(userAnswer)
-        quizViewModel.resetIsAnswered()
-
-        /*val messageResId = if (userAnswer == quizViewModel.currentQuestionAnswer) {
-            R.string.correct_toast
-        } else {
-            R.string.incorrect_toast
-        }*/
         cheatViewModel.cheated = false
         val messageResId = when {
             quizViewModel.isCheater -> "Cheating is wrong."
@@ -128,17 +116,14 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putInt(CURRENT_INDEX_KEY, quizViewModel.currentIndex)
         outState.putBoolean(IS_ANSWERED_KEY, quizViewModel.isLastQuestion())
-       // outState.putBoolean(USER_ANSWER_KEY, quizViewModel.userAnswer)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val savedIndex = savedInstanceState.getInt(CURRENT_INDEX_KEY)
         val isAnswered = savedInstanceState.getBoolean(IS_ANSWERED_KEY, false)
-        val userAnswer = savedInstanceState.getBoolean(USER_ANSWER_KEY, false)
 
         quizViewModel.currentIndex = savedIndex
-       // quizViewModel.userAnswer = userAnswer
 
         if (isAnswered) {
             updateQuestion()

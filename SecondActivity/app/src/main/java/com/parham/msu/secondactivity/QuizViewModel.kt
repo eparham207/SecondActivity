@@ -9,7 +9,7 @@ const val CURRENT_INDEX_KEY = "CURRENT_INDEX_KEY"
 const val CORRECT_ANSWER_KEY = "CORRECT_ANSWER_KEY"
 const val IS_CHEATER_KEY = "IS_CHEATER_KEY"
 const val IS_ANSWERED_KEY = "IS_ANSWERED_KEY"
-const val USER_ANSWER_KEY = "USER_ANSWER_KEY"
+
 
 class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
@@ -21,13 +21,6 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         Question(R.string.question_americas, answer = true),
         Question(R.string.question_asia, answer = true)
     )
-
-    /*var userAnswer: Boolean
-        get() = savedStateHandle.get(USER_ANSWER_KEY) ?: false
-        set(value) = savedStateHandle.set(USER_ANSWER_KEY, value)
-    var isAnswered: Boolean
-        get() = savedStateHandle.get(IS_ANSWERED_KEY) ?: false
-        set(value) = savedStateHandle.set(IS_ANSWERED_KEY, value)*/
     var currentIndex:Int
         get() = savedStateHandle.get(CURRENT_INDEX_KEY)?:0
         set(value) = savedStateHandle.set(CURRENT_INDEX_KEY, value)
@@ -57,19 +50,8 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         }
     }
 
-    fun resetIsAnswered(){
-        /*isAnswered = false
-        savedStateHandle.set(IS_ANSWERED_KEY, false)*/
-    }
     fun zero() {
         correctAnswerCount = 0
-    }
-
-    fun checkAnswer(userAnswer: Boolean) {
-        //this.userAnswer = userAnswer
-        if (userAnswer == currentQuestionAnswer) {
-            incrementCorrectAnswerCount()
-        }
     }
 
     private fun incrementCorrectAnswerCount() {
