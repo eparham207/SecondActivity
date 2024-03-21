@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityMainBinding
     private val quizViewModel: QuizViewModel by viewModels()
+    private val cheatViewModel: CheatViewModel by viewModels()
 
     private val cheatlauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -90,7 +91,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             R.string.incorrect_toast
         }*/
-
+        cheatViewModel.cheated = false
         val messageResId = when {
             quizViewModel.isCheater -> "Cheating is wrong."
             userAnswer == quizViewModel.currentQuestionAnswer -> "Correct!"
